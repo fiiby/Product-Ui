@@ -102,9 +102,16 @@ if (isset($_POST['signup'])) {
     include_once 'db-connect.php';
 
     //sql query:
-    $sql = "INSERT INTO User (username,email,password) VALUES('$username', '$email', '$password')";
+    $sql = "INSERT INTO users (username,email,password) VALUES('$username', '$email', '$password')";
 
-    // execute the query:
-    $database_connection->query($sql);
+    // Execute the query
+    if ($database_connection->query($sql) === TRUE) {
+        // Redirect to the login page
+        header("Location: login.php");
+        exit(); // Ensure that no further code is executed after the redirection
+    } else {
+        echo "Error: " . $sql . "<br>" . $database_connection->error;
+    }
 }
+
 ?>

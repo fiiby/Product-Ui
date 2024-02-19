@@ -13,7 +13,7 @@
             height: 100vh;
             width: 100%;
             /* background-color: papayawhip; */
-            background-color:wheat;
+            background-color: wheat;
         }
 
         h1 {
@@ -46,7 +46,7 @@
             border: 1px solid #ccc;
             border-radius: 4px;
             box-sizing: border-box;
-            background-color:whitesmoke;
+            background-color: whitesmoke;
         }
 
         .login-btn {
@@ -61,7 +61,8 @@
         .login-btn:hover {
             background-color: orangered;
         }
-        a{
+
+        a {
             text-decoration: none;
             color: blue;
         }
@@ -104,24 +105,40 @@
 </html>
 <?php
 if (isset($_POST['login'])) {
+    // Start session
     session_start();
+
+    // Get username, password, and role from form
     $username = $_POST['username'];
     $password = $_POST['password'];
+    $role = $_POST['role'];
 
-    // connect to db:
+    // Include database connection
     include_once 'db-connect.php';
 
-    //sql query:
-    $sql = "SELECT * FROM  user WHERE username = '$username' AND password = '$password'";
+    // SQL query to select user based on username, password, and role
+    $sql = "SELECT * FROM users WHERE username = '$username' AND password = '$password' AND role = '$role'";
 
-    // execute the query:
+    // Execute the query
     $result = $database_connection->query($sql);
+
+    // Check if a user with the provided credentials exists
     if ($result->num_rows > 0) {
-        echo "login successful";
+        // Store username in session
         $_SESSION['username'] = $username;
-        header('Location: cart.php');
+
+        // Redirect to product page based on role
+        if ($role == 'admin') {
+        header('Location: Admin.php');
+        } else {
+        header('Location: product.php');
+        }
+        exit(); // Stop further execution
     } else {
-        echo "invalid credentials";
+        // Invalid credentials
+        echo "Invalid credentials";
     }
 }
+?>
+
 ?>

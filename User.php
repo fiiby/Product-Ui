@@ -1,37 +1,42 @@
-
-
 <?php
 
-class User {
+class User
+{
     protected $id;
     protected $username;
     protected $email;
     protected $password;
 
-    public function __construct($id, $username, $email, $password) {
+    public function __construct($id, $username, $email, $password)
+    {
         $this->id = $id;
         $this->username = $username;
         $this->setEmail($email);
         $this->password = $password;
     }
 
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
-    public function getUsername() {
+    public function getUsername()
+    {
         return $this->username;
     }
 
-    public function getEmail() {
+    public function getEmail()
+    {
         return $this->email;
     }
 
-    public function getPassword() {
+    public function getPassword()
+    {
         return $this->password;
     }
 
-    protected function setEmail($email) {
+    protected function setEmail($email)
+    {
         // Basic email validation
         if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $this->email = $email;
@@ -39,21 +44,25 @@ class User {
             throw new InvalidArgumentException("Invalid email address");
         }
     }
-    
-    // connect to db:
-    include_once 'db-connect.php';
 
-    //sql query:
-    $sql = "SELECT * FROM  User WHERE username = '$username' AND password = '$password'";
 
-    // execute the query:
-    $result = $database_connection->query($sql);
-    if ($result->num_rows > 0) {
-        echo "login successful";
-        $_SESSION['username'] = $username;
-        header('Location: product.php');
-    } else {
-        echo "invalid credentials";
+    public function authenticate($username, $password)
+    {
+        // connect to db:
+        include_once 'db-connect.php';
+
+        //sql query:
+        $sql = "SELECT * FROM  users WHERE username = '$username' AND password = '$password'";
+
+        // execute the query:
+        $result = $database_connection->query($sql);
+        if ($result->num_rows > 0) {
+            echo "login successful";
+            $_SESSION['username'] = $username;
+            header('Location: product.php');
+        } else {
+            echo "invalid credentials";
+        }
     }
 }
 ?>
